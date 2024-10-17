@@ -16,7 +16,12 @@ vcpkg_check_features(
         llvm WITH_LLVM
 )
 
-if(integer-class-flint IN_LIST FEATURES)
+if(integer-class-boostmp IN_LIST FEATURES)
+    set(INTEGER_CLASS boostmp)
+    if(integer-class-flint IN_LIST FEATURES)
+        message(WARNING "Both boostmp and flint are given for integer class, will use boostmp only.")
+    endif()
+elseif(integer-class-flint IN_LIST FEATURES)
     set(INTEGER_CLASS flint)
 endif()
 
@@ -36,6 +41,7 @@ vcpkg_cmake_configure(
         -DWITH_SYMENGINE_RCP=yes
         -DWITH_SYMENGINE_TEUCHOS=no
         -DWITH_SYMENGINE_THREAD_SAFE=yes
+        -DINTEGER_CLASS=${INTEGER_CLASS}
         ${FEATURE_OPTIONS}
 )
 
